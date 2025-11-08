@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>w1zx1.github.io</title>
+  <meta name="description" content="w1zx1.github.io" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Rubik:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1: #000000;
+      --bg2: #111111;
+      --glass-border: rgba(255,255,255,0.12);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Orbitron', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial}
+
+    body{
+      display:grid;
+      place-items:center;
+      background:linear-gradient(120deg,var(--bg1),var(--bg2));
+      overflow:hidden;
+      color:white;
+    }
+
+    .blobs{position:fixed;inset:0;z-index:0;pointer-events:none}
+    .blob{
+      position:absolute;
+      width:42vmax;height:42vmax;border-radius:40%;
+      filter:blur(80px) opacity(.4);
+      transform: translate3d(0,0,0);
+      mix-blend-mode:screen;
+      animation: float 6s ease-in-out infinite;
+    }
+    .blob.b1{left:-10%;top:-20%;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.8), rgba(255,255,255,.1)); animation-duration:10s}
+    .blob.b2{right:-25%;bottom:-10%;background:radial-gradient(circle at 60% 40%, rgba(220,220,220,.8), rgba(220,220,220,.1)); animation-duration:12s}
+    .blob.b3{left:10%;bottom:-30%;background:radial-gradient(circle at 40% 60%, rgba(180,180,180,.8), rgba(180,180,180,.1)); animation-duration:14s}
+
+    @keyframes float{
+      0%{transform:translateY(0) translateX(0) scale(1)}
+      50%{transform:translateY(-6vh) translateX(3vw) scale(1.05)}
+      100%{transform:translateY(0) translateX(0) scale(1)}
+    }
+
+    .particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+    .particle{position:absolute;width:6px;height:6px;border-radius:50%;opacity:.15;transform:translate3d(0,0,0);animation: drift linear infinite;background:radial-gradient(circle, rgba(255,255,255,0.9), rgba(255,255,255,0.18))}
+    @keyframes drift{from{transform:translateY(0) translateX(0)} to{transform:translateY(-120vh) translateX(40vw)}}
+
+    .stage{
+      position:relative;z-index:10;display:flex;align-items:center;justify-content:center;padding:4vmin; width:min(92vw,1100px);height:min(70vh,720px);
+    }
+
+    .glass{
+      position:relative;
+      width:min(80vw,760px);
+      max-width:100%;
+      height:min(46vh,420px);
+      border-radius:20px;
+      background: rgba(255,255,255,0.05);
+      border:1px solid var(--glass-border);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+      backdrop-filter: blur(12px) saturate(0);
+      -webkit-backdrop-filter: blur(12px) saturate(0);
+      display:flex;align-items:center;justify-content:center;flex-direction:column;
+      overflow:hidden;
+      animation: sway 6s ease-in-out infinite;
+    }
+
+    @keyframes sway {
+      0% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-2px) rotate(0.3deg); }
+      50% { transform: translateY(2px) rotate(-0.3deg); }
+      75% { transform: translateY(-1px) rotate(0.2deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    .avatar{
+      width:120px;height:120px;
+      border-radius:50%;
+      overflow:hidden;
+      margin-bottom:20px;
+      box-shadow:0 0 20px rgba(255,255,255,0.1);
+      transition:transform .3s ease;
+    }
+    .avatar:hover{transform:scale(1.05);}
+
+    .avatar img{
+      width:100%;height:100%;object-fit:cover;
+      display:block;
+    }
+
+    .nickname{
+      font-size:2.5rem;
+      font-weight:600;
+      letter-spacing:2px;
+      color:#f1f1f1;
+      text-shadow:0 0 10px rgba(255,255,255,0.3);
+      opacity:0;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    .description{
+      font-family:'Rubik', sans-serif;
+      font-size:1rem;
+      color:#ccc;
+      margin-top:10px;
+      opacity:0;
+      animation: fadeIn 2s ease 0.8s forwards;
+      text-align:center;
+      letter-spacing:0.5px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .toggle-container{
+      position:fixed;
+      top:20px;right:20px;
+      z-index:100;
+    }
+
+    .toggle{
+      appearance:none;
+      width:50px;height:26px;
+      background:#333;
+      border-radius:20px;
+      position:relative;
+      cursor:pointer;
+      outline:none;
+      transition:background 0.3s;
+    }
+
+    .toggle::before{
+      content:"";
+      position:absolute;
+      top:3px;left:3px;
+      width:20px;height:20px;
+      background:white;
+      border-radius:50%;
+      transition:transform 0.3s;
+    }
+
+    .toggle:checked{
+      background:#888;
+    }
+
+    .toggle:checked::before{
+      transform:translateX(24px);
+    }
+
+    body.lowfx .blobs{display:none;}
+    body.lowfx .glass{
+      backdrop-filter:none;
+      -webkit-backdrop-filter:none;
+      background:#1a1a1a;
+      box-shadow:none;
+      animation:none;
+      transition:none;
+    }
+    body.lowfx *{animation:none !important;transition:none !important;filter:none !important;}
+    body.lowfx .nickname, body.lowfx .description {opacity:1 !important; transform:none !important;}
+  </style>
+</head>
+<body>
+  <div class="toggle-container">
+    <input type="checkbox" id="lowfx-toggle" class="toggle" />
+  </div>
+
+  <div class="blobs" aria-hidden="true">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+  <div class="particles" id="particles" aria-hidden="true"></div>
+
+  <main class="stage" role="main">
+    <section class="glass">
+      <div class="avatar"><img src="avatar.png" alt="avatar" /></div>
+      <div class="nickname">w1zx1</div>
+      <div class="description">санечка / илюша НЕ гей</div>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const container = document.getElementById('particles');
+      const count = Math.max(18, Math.floor(window.innerWidth / 60));
+      for(let i=0;i<count;i++){
+        const el = document.createElement('div');
+        el.className = 'particle';
+        const size = (Math.random()*6)+3;
+        el.style.width = size + 'px';
+        el.style.height = size + 'px';
+        el.style.left = (Math.random()*120 - 10) + '%';
+        el.style.top = (Math.random()*120 - 10) + '%';
+        el.style.opacity = (Math.random()*0.22 + 0.06).toFixed(2);
+        el.style.animationDuration = (8 + Math.random()*10) + 's';
+        el.style.animationDelay = (-Math.random()*12) + 's';
+        container.appendChild(el);
+      }
+    })();
+
+    const toggle = document.getElementById('lowfx-toggle');
+    const body = document.body;
+    if(localStorage.getItem('lowfx')==='true'){
+      body.classList.add('lowfx');
+      toggle.checked = true;
+    }
+
+    toggle.addEventListener('change',()=>{
+      if(toggle.checked){
+        body.classList.add('lowfx');
+        localStorage.setItem('lowfx','true');
+      }else{
+        body.classList.remove('lowfx');
+        localStorage.setItem('lowfx','false');
+      }
+    });
+  </script>
+</body>
+
+</html>
